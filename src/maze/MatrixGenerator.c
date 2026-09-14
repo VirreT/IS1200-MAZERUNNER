@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//Each node in the maze with a given random weight
+// Each node in the maze with a given weight, links to all adjacent nodes
 typedef struct node {
 
     char weight;
@@ -13,7 +13,7 @@ typedef struct node {
 
 } node;
 
-//Generates a matrix of nodes with random weights (1-20)
+// Generates a matrix (dim x dim) of nodes with random weights (1-20)
 node **generateMatrix(int dim) {
 
     node **matrix = malloc(dim * sizeof(node *));
@@ -66,7 +66,7 @@ void linkMatrix(node **matrix, int dim){
     }
 }
 
-//Frees the allocated memory for the matrix of nodes
+// Frees the allocated memory for the matrix of nodes
 void freeMatrix(node **matrix, int dim) {
 
     for (int x = 0; x < dim; x++) {
