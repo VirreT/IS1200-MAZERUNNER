@@ -90,11 +90,10 @@ void printMatrix(node **matrix, int dim){
 }
 
 int main(void) {
-    int size = 8;
+    int size = 100;
     node **mtx = generateMatrix(size);
 
     printMatrix(mtx, size);
-    printNode(mtx, 4, 4);
 
     freeMatrix(mtx, size);
     return 0;
