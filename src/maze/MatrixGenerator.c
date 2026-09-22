@@ -89,11 +89,51 @@ void printMatrix(node **matrix, int dim){
     }
 }
 
+
+// Prints weights of a given node
+void printNode(node *n) {
+
+    if (n == NULL) {
+        printf("Node is NULL\n");
+        return;
+    }
+
+    printf("Node [%2d]:\n", n->weight);
+
+    if (n->above != NULL) {
+        printf("  Above: [%2d]\n", n->above->weight);
+    } else {
+        printf("  Above: NULL\n");
+    }
+
+    if (n->below != NULL) {
+        printf("  Below: [%2d]\n", n->below->weight);
+    } else {
+        printf("  Below: NULL\n");
+    }
+
+    if (n->left != NULL) {
+        printf("  Left:  [%2d]\n", n->left->weight);
+    } else {
+        printf("  Left:  NULL\n");
+    }
+
+    if (n->right != NULL) {
+        printf("  Right: [%2d]\n", n->right->weight);
+    } else {
+        printf("  Right: NULL\n");
+    }
+}
+
 int main(void) {
-    int size = 100;
+    int size = 4;
     node **mtx = generateMatrix(size);
 
-    printMatrix(mtx, size);
+    linkMatrix(mtx, size);
+
+    //printMatrix(mtx, size);
+
+    //printNode(&mtx[2][1]);
 
     freeMatrix(mtx, size);
     return 0;
