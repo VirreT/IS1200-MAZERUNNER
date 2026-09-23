@@ -133,17 +133,3 @@ void printNode(node *n) {
         printf("  Right: NULL\n");
     }
 }
-
-int main(void) {
-    int size = 4;
-    node **mtx = generateMatrix(size);
-
-    linkMatrix(mtx, size);
-
-    //printMatrix(mtx, size);
-
-    //printNode(&mtx[2][1]);
-
-    //freeMatrix(mtx, size);
-    return 0;
-}
