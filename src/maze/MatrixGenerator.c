@@ -1,5 +1,10 @@
+//-------------------------
+//--- MatrixGenerator.c ---
+//-------------------------
+
 #include <stdio.h>
 #include <stdlib.h>
+#include "maze/MatrixGenerator.h"
 
 // Each node in the maze with a given weight, links to all adjacent nodes
 typedef struct node {
@@ -38,25 +43,29 @@ void linkMatrix(node **matrix, int dim){
     for (int x = 0; x < dim; x++){   
 
         for (int y = 0; y < dim; y++){
-
+            
+            // Link left
             if (x > 0) {
                 matrix[x][y].above = &matrix[x - 1][y];
             } else {
                 matrix[x][y].above = NULL;
             }
 
+            // Link right
             if (x < dim - 1) {
                 matrix[x][y].below = &matrix[x + 1][y];
             } else {
                 matrix[x][y].below = NULL;
             }
 
+            // Link below
             if (y > 0) {
                 matrix[x][y].left = &matrix[x][y - 1];
             } else {
                 matrix[x][y].left = NULL;
             }
 
+            // Link above
             if (y < dim - 1) {
                 matrix[x][y].right = &matrix[x][y + 1];
             } else {
@@ -135,6 +144,6 @@ int main(void) {
 
     //printNode(&mtx[2][1]);
 
-    freeMatrix(mtx, size);
+    //freeMatrix(mtx, size);
     return 0;
 }
