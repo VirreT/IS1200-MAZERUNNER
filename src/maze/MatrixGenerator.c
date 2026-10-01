@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "maze/MatrixGenerator.h"
 
 // Each node in the maze with a given weight, links to all adjacent nodes

@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "maze/MatrixGenerator.h"
+#include "helpers/randomizer.h"
 
 int main() {
 
