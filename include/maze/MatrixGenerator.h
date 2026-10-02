@@ -2,20 +2,11 @@
 //--- MatrixGenerator.h ---
 //-------------------------
 
-#ifndef MATRIX_GENERATOR_H
-#define MATRIX_GENERATOR_H
+#ifndef MATRIXGENERATOR_H
+#define MATRIXGENERATOR_H
 
 // Each node in the maze with a given weight, links to all adjacent nodes
-typedef struct node {
-
-    char weight;
-
-    struct node* left;
-    struct node* right;
-    struct node* above;
-    struct node* below;
-
-} node;
+#include "MatrixGenerator.h"
 
 // Generates a matrix (dim x dim) of nodes with random weights (1-20)
 node **generateMatrix(int dim);

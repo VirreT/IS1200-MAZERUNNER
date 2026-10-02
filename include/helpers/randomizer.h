@@ -12,7 +12,7 @@ void rng_seed(uint32_t seed);
 // Returns the next raw 32-bit pseudo-random value
 uint32_t rng_next(void);
 
-// Random number in [min, max)
+// Random number in [min, max]
 uint32_t rng(uint32_t min, uint32_t max);
 
 #endif

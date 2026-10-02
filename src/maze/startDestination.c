@@ -1,12 +1,15 @@
-#include stdio.h>
- 
+#include <stdio.h>
+
  #include "maze/MatrixGenerator.h"
  #include "helpers/randomizer.h"
  
+ 
+ //Sets the start node in the matrix
  void setStart(node **matrix, int dim) {
-     // Implementation for setting the start position
- }
+    matrix[0][rng(0, dim - 1)].weight = 'S';
+}
 
+//Sets the destination node in the matrix
  void setDestination(node **matrix, int dim) {
-     // Implementation for setting the destination position
- }
+    matrix[dim - 1][rng(0, dim - 1)].weight = 'D';
+}

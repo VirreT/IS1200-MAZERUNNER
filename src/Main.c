@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <maze/MatrixGenerator.h>
-
+#include "maze/MatrixGenerator.h"
 
 
 int main(){
@@ -10,8 +9,8 @@ int main(){
 
     node **matrix = generateMatrix(mtxSize);
     linkMatrix(matrix, mtxSize);
-    //printMatrix(matrix, mtxSize);
-    //printNode(&matrix[1][1]);
+    printMatrix(matrix, mtxSize);
+    printNode(&matrix[1][1]);
 
     freeMatrix(matrix, mtxSize);
     

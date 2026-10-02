@@ -1,7 +1,9 @@
 #include "helpers/randomizer.h"
 #include <stdint.h>
 
-#define TIMER_BASE 0x04000020   // verify against your lab manual
+
+// Written by Claude AI
+#define TIMER_BASE 0x04000020
 
 static uint32_t rng_state = 1;  // must never be 0
 
@@ -16,11 +18,15 @@ uint32_t read_timer(void) {
 
 // Seeds the generator (use clock)
 void rng_seed(uint32_t seed) {
-    rng_state = seed ? seed : 1;
+    
+    if (seed == 0) {
+        seed = 1;
+    }
+    rng_state = seed;
 }
 
 // Returns the next raw 32-bit pseudo-random value
-uint32_t rng_next(void) {
+uint32_t rng_next(x) {
     uint32_t x = rng_state;
     x ^= x << 13;
     x ^= x >> 17;
@@ -29,7 +35,9 @@ uint32_t rng_next(void) {
     return x;
 }
 
-// Random number in [min, max)
+// Random number in [min, max]
 uint32_t rng(uint32_t min, uint32_t max) {
-    return (rng_next() % (max - min + 1)) + min;
+    uint32_t seed = read_timer();
+
+    return (rng_next(seed) % (max - min + 1)) + min;
 }
