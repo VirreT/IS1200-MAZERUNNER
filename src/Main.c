@@ -2,9 +2,11 @@
 #include <stdlib.h>
 
 #include "maze/MatrixGenerator.h"
+#include "maze/StartDestination.h"
 
 int get_sw(void);
 int get_btn(void);
+int bfs(node **matrix, int dim);
 
 int main(void){
     int previousButton = 0;
@@ -35,7 +37,10 @@ int main(void){
             mtxSize = 8 << sizeChoice;
             matrix = generateMatrix(mtxSize);
             linkMatrix(matrix, mtxSize);
-            
+
+            setStart(matrix, mtxSize);
+            setDestination(matrix, mtxSize);
+
             printMatrix(matrix, mtxSize);
             printNode(&matrix[1][1]);
             
@@ -66,7 +71,7 @@ int main(void){
             switch (algorithm){
                 case 0:
                 printf("BFS vald\n");
-                // Anropa BFS här
+                bfs(matrix, mtxSize);
                 break;
 
                 case 1:
