@@ -1,4 +1,8 @@
-#include "helpers/randomizer.h"
+//----------------------
+//---- Randomizer.c ----
+//----------------------
+
+#include "helpers/Randomizer.h"
 #include <stdint.h>
 
 

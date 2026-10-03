@@ -1,7 +1,11 @@
+//----------------------------
+//---- StartDestination.c ----
+//----------------------------
+
 #ifndef STARTDESTINATION_H
 #define STARTDESTINATION_H 
  
-#include "MatrixGenerator.h"
+#include "maze/MatrixGenerator.h"
 
 //Sets the start node in the matrix
 void setStart(node **matrix, int dim);

@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 #include "maze/MatrixGenerator.h"
-#include "helpers/randomizer.h"
+#include "helpers/Randomizer.h"
 
 // Generates a matrix (dim x dim) of nodes with random weights (1-20)
 node **generateMatrix(int dim) {

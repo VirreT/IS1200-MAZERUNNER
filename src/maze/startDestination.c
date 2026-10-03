@@ -1,7 +1,12 @@
+//----------------------------
+//---- StartDestination.c ----
+//----------------------------
+
 #include <stdio.h>
 
- #include "maze/MatrixGenerator.h"
- #include "helpers/randomizer.h"
+#include "maze/MatrixGenerator.h"
+#include "helpers/Randomizer.h"
+#include "maze/StartDestination.h"
  
  
  //Sets the start node in the matrix
