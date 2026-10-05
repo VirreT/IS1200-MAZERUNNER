@@ -15,22 +15,15 @@ void buildWalls(node **matrix, int dim){
 
     if (wallCount < NOFWALLS){    
 
-        for (int x = 0; x < dim; x++){
+        int x = rng(0, dim - 1);
+        int y = rng(0, dim - 1);
+
+        if (matrix[x][y].weight != 'S' && matrix[x][y].weight != 'D'){
          
-            for (int y = 0; y < dim; y++){
-                
-                if(rng(1, 100) <= 20){ // 20% chance of placing a wall
-                    
-                    if(matrix[x][y].weight != 'S' && matrix[x][y].weight != 'D'){
-                        matrix[x][y].weight = '#';
-                    }
-                }
-
-            }
-   
+            matrix[x][y].weight = '#';
+            wallCount++;
+        
         }
-
-        wallCount++;
     }
 }
 
