@@ -29,6 +29,35 @@ SW4 Väggar på/av (när varje gång vi slår på så är väggarna random)
 #include <stdio.h>
 #include <stdlib.h>
 
+int main(void)
+{
+    int previousSw = -1;
+
+    while (1) {
+        int sw = get_sw();
+
+        if (sw != previousSw) {
+            int algorithm = sw & 0x3;
+            int sizeChoice = (sw >> 2) & 0x3;
+            int wallsOn = (sw >> 4) & 0x1;
+            int mazeSize = 8 << sizeChoice;
+
+            print("Algoritm: ");
+            print_dec(algorithm);
+
+            print(" | Storlek: ");
+            print_dec(mazeSize);
+
+            print(" | Vaggar: ");
+            print_dec(wallsOn);
+
+            print("\n");
+
+            previousSw = sw;
+        }
+    }
+}
+
 // Swtiches, reads SW0-Sw9
 int get_sw(void){
 
