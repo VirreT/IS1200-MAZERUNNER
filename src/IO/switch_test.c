@@ -28,7 +28,7 @@ int main(void)
     *timerStatus = 0;
     *timerControl = 0x6; // Starta kontinuerligt utan avbrott
 
-    int sw = get_sw();
+    int sw = get_sw() & 0x1F;
     int candidateSw = sw;
     int stableReads = 0;
     int previousSw = -1;
@@ -38,7 +38,7 @@ int main(void)
         if (*timerStatus & 0x1) {
             *timerStatus = 0;
 
-            int rawSw = get_sw();
+            int rawSw = get_sw() & 0x1F;
 
             if (rawSw != candidateSw) {
                 candidateSw = rawSw;
