@@ -1,3 +1,7 @@
+//-----------------------------------
+//---- Partly Written by ChatGPT ----
+//-----------------------------------
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -5,12 +9,6 @@
 
 #include "maze/MatrixGenerator.h"
 
-/*
- * Returnerar:
- * >= 0: antal steg till målet
- *   -1: ingen väg finns
- *   -2: fel, exempelvis saknad start eller minnesbrist
- */
 int bfs(node **matrix, int dim) {
     if (matrix == NULL || dim <= 0 || dim > INT_MAX / dim) {
         printf("BFS: invalid matrix or size.\n");
