@@ -1,3 +1,6 @@
+#include "dtekv-lib.h"
+
+
 int get_sw(void);
 
 int get_btn(void);
@@ -12,7 +15,6 @@ void handle_interrupt(unsigned cause)
 int main(void)
 {
     int previousSw = -1;
-
     int previousButton = get_btn();
 
     while (1) {
@@ -36,6 +38,7 @@ int main(void)
             print("\n");
 
             previousSw = sw;
+        }
 
             int button = get_btn();
 
@@ -46,6 +49,5 @@ int main(void)
             }
 
             previousButton = button;
-        }
     }
 }
