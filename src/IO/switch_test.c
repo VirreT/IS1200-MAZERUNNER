@@ -16,17 +16,15 @@ int main(void)
 {
     volatile unsigned int *timerStatus     = (volatile unsigned int *)0x04000020;
     volatile unsigned int *timerControl    = (volatile unsigned int *)0x04000024;
-    volatile unsigned int *timerPeriodLow  = (volatile unsigned int *)0x04000028;
-    volatile unsigned int *timerPeriodHigh =(volatile unsigned int *)0x0400002C;
+    volatile unsigned int *timer_periodl  = (volatile unsigned int *)0x04000028;
+    volatile unsigned int *timer_periodh = (volatile unsigned int *)0x0400002C;
 
-    /* 30 MHz enligt LAB3: 300 000 klockcykler = 10 ms. */
-    unsigned int period = 300000u - 1u;
-
-    *timerControl = 0x8; // Stoppa timern
-    *timerPeriodLow = period & 0xFFFF;
-    *timerPeriodHigh = period >> 16;
+    /* Samma timerperiod som LAB3: 100 ms vid 30 MHz. */
+    *timerControl = 0x8; // STOP
+    *timer_periodl = 0xC6BF;
+    *timer_periodh = 0x002D;
     *timerStatus = 0;
-    *timerControl = 0x6; // Starta kontinuerligt utan avbrott
+    *timerControl = 0x6; // START + CONT, utan avbrott
 
     int sw = get_sw() & 0x1F;
     int candidateSw = sw;
@@ -35,6 +33,7 @@ int main(void)
     int previousButton = get_btn();
 
     while (1) {
+        /* Kontrollera switcharna varje gång 100 ms har gått. */
         if (*timerStatus & 0x1) {
             *timerStatus = 0;
 
@@ -43,21 +42,27 @@ int main(void)
             if (rawSw != candidateSw) {
                 candidateSw = rawSw;
                 stableReads = 1;
-            } else if (stableReads < 3) {
+            } else if (stableReads < 2) {
                 stableReads++;
             }
 
-            if (stableReads == 3 && candidateSw != previousSw) {
+            /* Godkänn två lika avläsningar 100 ms isär. */
+            if (stableReads == 2 && candidateSw != previousSw) {
                 sw = candidateSw;
 
+                int algorithm = sw & 0x3;
+                int sizeChoice = (sw >> 2) & 0x3;
+                int wallsOn = (sw >> 4) & 0x1;
+                int mazeSize = 8 << sizeChoice;
+
                 print("Algoritm: ");
-                print_dec(sw & 0x3);
+                print_dec(algorithm);
 
                 print(" | Storlek: ");
-                print_dec(8 << ((sw >> 2) & 0x3));
+                print_dec(mazeSize);
 
                 print(" | Vaggar: ");
-                print_dec((sw >> 4) & 0x1);
+                print_dec(wallsOn);
 
                 print("\n");
 
@@ -65,6 +70,7 @@ int main(void)
             }
         }
 
+        /* Kontrollera knappen varje varv i loopen. */
         int button = get_btn();
 
         if (button && !previousButton) {
