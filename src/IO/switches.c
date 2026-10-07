@@ -33,7 +33,7 @@ SW4 Väggar på/av (när varje gång vi slår på så är väggarna random)
 int get_sw(void){
 
   volatile int *switches = (volatile int *) 0x04000010; 
-  return *switches & 0x3FF;
+  return *switches & 0x1F;
 }
 
 // Buttons
