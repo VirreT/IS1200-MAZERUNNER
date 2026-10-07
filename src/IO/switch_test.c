@@ -7,24 +7,23 @@ int get_btn(void);
 
 /* Krävs av kursens boot.S.
    Testet aktiverar inga avbrott. */
-void handle_interrupt(unsigned cause)
-{
+void handle_interrupt(unsigned cause){
     (void)cause;
 }
 
-int main(void)
-{
-    volatile unsigned int *timerStatus     = (volatile unsigned int *)0x04000020;
-    volatile unsigned int *timerControl    = (volatile unsigned int *)0x04000024;
-    volatile unsigned int *timer_periodl  = (volatile unsigned int *)0x04000028;
+int main(void){
+    volatile unsigned int *timerStatus   = (volatile unsigned int *)0x04000020;
+    volatile unsigned int *timerControl  = (volatile unsigned int *)0x04000024;
+    volatile unsigned int *timer_periodl = (volatile unsigned int *)0x04000028;
     volatile unsigned int *timer_periodh = (volatile unsigned int *)0x0400002C;
 
-    /* Samma timerperiod som LAB3: 100 ms vid 30 MHz. */
     *timerControl = 0x8; // STOP
+    
     *timer_periodl = 0xC6BF;
     *timer_periodh = 0x002D;
+
     *timerStatus = 0;
-    *timerControl = 0x6; // START + CONT, utan avbrott
+    *timerControl = 0x6; // START and CONT
 
     int sw = get_sw() & 0x1F;
     int candidateSw = sw;
@@ -33,7 +32,7 @@ int main(void)
     int previousButton = get_btn();
 
     while (1) {
-        /* Kontrollera switcharna varje gång 100 ms har gått. */
+        /* Check switches every time 100ms has passed */
         if (*timerStatus & 0x1) {
             *timerStatus = 0;
 
