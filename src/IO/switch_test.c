@@ -14,8 +14,6 @@ void handle_interrupt(unsigned cause)
 
 int main(void)
 {
-
-    print("SWITCHTEST VERSION 3\n");
     volatile unsigned int *timerStatus     = (volatile unsigned int *)0x04000020;
     volatile unsigned int *timerControl    = (volatile unsigned int *)0x04000024;
     volatile unsigned int *timer_periodl  = (volatile unsigned int *)0x04000028;
@@ -50,14 +48,6 @@ int main(void)
 
             /* Godkänn två lika avläsningar 100 ms isär. */
             if (stableReads == 2 && candidateSw != previousSw) {
-                
-                print("DEBUG nytt=");
-                print_hex32(candidateSw);
-                print(" gammalt=");
-                print_hex32(previousSw);
-                print("\n");
-
-                
                 sw = candidateSw;
 
                 int algorithm = sw & 0x3;
