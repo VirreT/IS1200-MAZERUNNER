@@ -39,13 +39,25 @@ void drawRectangle(int x, int y, int width, int height,
 
 int main(void)
 {
-    clearScreen();
+    volatile unsigned char *VGA =
+        (volatile unsigned char *)0x08000000;
 
-    /* Tutorialens fem vita pixelrader. */
-    drawRectangle(0, 118, 320, 5, 255);
+    /* Svart bakgrund. */
+    for (int i = 0; i < 320 * 480; i++) {
+        VGA[i] = 0;
+    }
 
-    /* En vit rektangel ovanför bandet. */
-    drawRectangle(40, 40, 80, 50, 255);
+    /* Fem vita rader. */
+    for (int i = 0; i < 320 * 5; i++) {
+        VGA[320 * 118 + i] = 255;
+    }
+
+    /* Vit rektangel. */
+    for (int y = 40; y < 90; y++) {
+        for (int x = 40; x < 120; x++) {
+            VGA[y * 320 + x] = 255;
+        }
+    }
 
     while (1) {
     }
