@@ -1,97 +1,138 @@
-#include <stdio.h>
-#include <stdlib.h>
 
 #include "maze/MatrixGenerator.h"
-#include "maze/StartDestination.h"
+#include "maze/startDestination.h"
 
-int get_sw(void);
-int get_btn(void);
+#include "IO/input.h"
+#include "dtekv-lib.h"
+
+
 int bfs(node **matrix, int dim);
+int dfs(node **matrix, int dim);
+int dijkstra(node **matrix, int dim);
+void buildWalls(node **matrix, int dim);
+
+void handle_interrupt(unsigned cause)
+{
+    (void)cause;
+}
 
 int main(void){
-    int previousButton = 0;
-    int previousWallsOn = 0;
-    int previousSizeChoice = -1; // Is used to create matrix at start
+    
+    input_init();
 
-    int mtxSize = 0;
-    node **matrix = NULL;
+    InputState input;
+
+    node **matrix = 0;
+    int mazeSize = 0;
+
+    int previousSizeChoice = -1; // Is used to create matrix at start
+    int previousWallsOn = -1;
+    int previousAlgorithm = -1;
 
     while(1){
-        int sw = get_sw();
-        int button = get_btn();
 
-        int algorithm = sw & 0x3;           // SW0-SW1
-        int sizeChoice = (sw >> 2) & 0x3;   //SW2-SW3
-        int wallsOn = (sw >> 4) & 0x1;      //SW4
+        input_update(&input);
+
+        int algorithm = input.algorithm;           // SW0-SW1
+        int sizeChoice = input.sizeChoice;   //SW2-SW3
+        int wallsOn = input.wallsOn;      //SW4
 
         int sizeChanged = sizeChoice != previousSizeChoice;
+
+        int wallsChanged = wallsOn != previousWallsOn;
 
         /**
          * Generate matrix at start or when size is changed
          */
-        if (sizeChanged){
-            if (matrix != NULL){
-                freeMatrix(matrix, mtxSize);
+        if (sizeChanged || wallsChanged){
+            if (matrix != 0){
+                freeMatrix(matrix, mazeSize);
             }
 
-            mtxSize = 8 << sizeChoice;
-            matrix = generateMatrix(mtxSize);
-            linkMatrix(matrix, mtxSize);
+            mazeSize = 8 << sizeChoice;
+            matrix = generateMatrix(mazeSize);
 
-            setStart(matrix, mtxSize);
-            setDestination(matrix, mtxSize);
+            if(matrix == 0){
+                print("Could not create matrix. \n");
+                return 1;
+            }
 
-            printMatrix(matrix, mtxSize);
-            printNode(&matrix[1][1]);
-            
-            printf("Size: %d x %d\n", mtxSize, mtxSize);
+            linkMatrix(matrix, mazeSize);
+            setStart(matrix, mazeSize);
+            setDestination(matrix, mazeSize);
+
+            if(wallsOn){
+                buildWalls(matrix, mazeSize);
+            }
+
+            print("New labrinth: ");
+            print_dec(mazeSize);
+            print(" x ");
+            print_dec(mazeSize);
+
+            print(" | Vaggar: ");
+            print_dec(wallsOn);
+            print("\n");
+
+            previousSizeChoice = sizeChoice;
+            previousWallsOn = wallsOn;
         }
 
+        if (algorithm != previousAlgorithm) {
+            print("Chosen algoritm: ");
 
-        /* 
-         * Generate walls when SW4 is tunred on, 
-         * or when a new matrix is generated with SW4 tuned on
-         */
-        if (wallsOn && (sizeChanged || !previousWallsOn)){
-            // Anropa väggfunktion med matrix och mtxSize här
-        }       
-        
-        
-        /* Remove walls when SW4 is turned off
-         * A new matrix has already been made without walls
-         */    
-        if (!wallsOn && previousWallsOn && !sizeChanged){
-                // anropa funktion som tar bort väggarna
-        }        
-        
-        /*
-         * Choose what algorithm to run 
-         */
-        if (button && !previousButton){
+            switch (algorithm) {
+                case 0:
+                    print("BFS\n");
+                    break;
+
+                case 1:
+                    print("DFS\n");
+                    break;
+
+                case 2:
+                    print("Dijkstra\n");
+                    break;
+
+                case 3:
+                    print("Comparison\n");
+                    break;
+            }
+
+            previousAlgorithm = algorithm;
+        }
+
+        if (input.startPressed){
             switch (algorithm){
                 case 0:
-                printf("BFS vald\n");
-                bfs(matrix, mtxSize);
+                print("BFS chosen\n");
+                bfs(matrix, mazeSize);
                 break;
 
                 case 1:
-                printf("DFS vald\n");
-                // Anropa DFS här
+                print("DFS chosen\n");
+                dfs(matrix, mazeSize);
                 break;
 
                 case 2:
-                printf("Djikstra vald\n");
-                // Anropa Djikstra här
+                print("Dijkstra chosen\n");
+                dijkstra(matrix, mazeSize);
                 break;
 
                 case 3:
-                printf("Jamforelselage valt\n");
-                // Kör och jämför algortimerna här
+                print("Comparison chosen\n");
+                print("BFS chosen\n");
+                bfs(matrix, mazeSize);
+                
+                print("DFS chosen\n");
+                dfs(matrix, mazeSize);
+
+                print("Dijkstra chosen\n");
+                dijkstra(matrix, mazeSize);
                 break;
+                
             }
+            print("Done! \n");   
         }
-        previousSizeChoice = sizeChoice;
-        previousWallsOn = wallsOn;
-        previousButton = button; // Prevents the program to restart whilst the button is being pressed down
     }
 }
