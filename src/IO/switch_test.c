@@ -9,10 +9,29 @@ void handle_interrupt(unsigned cause)
 
 int main(void)
 {
-    volatile unsigned int *leds =
-        (volatile unsigned int *)0x04000000;
+    int previousSw = -1;
 
     while (1) {
-        *leds = (unsigned int)get_sw() & 0x3FF;
+        int sw = get_sw();
+
+        if (sw != previousSw) {
+            int algorithm = sw & 0x3;
+            int sizeChoice = (sw >> 2) & 0x3;
+            int wallsOn = (sw >> 4) & 0x1;
+            int mazeSize = 8 << sizeChoice;
+
+            print("Algoritm: ");
+            print_dec(algorithm);
+
+            print(" | Storlek: ");
+            print_dec(mazeSize);
+
+            print(" | Vaggar: ");
+            print_dec(wallsOn);
+
+            print("\n");
+
+            previousSw = sw;
+        }
     }
 }
