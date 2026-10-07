@@ -1,7 +1,7 @@
 SRC_DIR ?= ./
 OBJ_DIR ?= ./
 
-SOURCES ?= src/IO/switch_test.c src/IO/switches.c dtekv-lib.c boot.S
+SOURCES ?= src/graphics/vga_test.c dtekv-lib.c boot.S
 
 OBJECTS ?= $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 LINKER ?= $(SRC_DIR)/dtekv-script.lds
