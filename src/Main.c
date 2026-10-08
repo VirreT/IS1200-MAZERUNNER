@@ -1,29 +1,22 @@
 #include "graphics/graphics.h"
 #include "IO/input.h"
 #include "pathfinder/pathfinder.h"
-
-#include "maze/walls.h"
-#include "maze/startDestination.h"
 #include "graphics/ui.h"
+#include "maze/MatrixGenerator.h"
 
-#define MAX_SIZE 64
 #define MAZE_PIXELS 192
 
-static node cells[MAX_SIZE][MAX_SIZE];
-static node *matrix[MAX_SIZE];
+static node **matrix;
 
 void handle_interrupt(unsigned cause)
 {
     (void)cause;
 }
 
-static unsigned int randomState = 123456789u;
-
 static const char *algorithmNames[4] = {
     "BFS", "DFS", "DIJKSTRA", "ALL"
 };
 
-static int savedPath[MAX_PATH_NODES];
 static int savedLength;
 static int savedCost;
 
@@ -31,44 +24,16 @@ static int resultStatus[3];
 static int resultSteps[3];
 static int resultCost[3];
 
-static unsigned int nextRandom(void){
-    randomState ^= randomState << 13;
-    randomState ^= randomState >> 17;
-    randomState ^= randomState << 5;
-
-    return randomState;
-}
-
 static void showTestMaze(int dim, int wallsOn)
 {
-    for (int row = 0; row < dim; row++) {
-        matrix[row] = cells[row];
+    matrix = generateMaze(dim, wallsOn);
 
-        for (int column = 0; column < dim; column++) {
-            matrix[row][column].weight = 1 + nextRandom() % 20; //if only 1 all nodes = 1, now random up to 20
-
-            node *n = &matrix[row][column];
-
-            n->above = row > 0 ? &cells[row - 1][column] : 0;
-            n->below = row < dim - 1 ? &cells[row + 1][column] : 0;
-            n->left = column > 0 ? &cells[row][column - 1] : 0;
-            n->right = column < dim - 1 ? &cells[row][column + 1] : 0;
-        }
-    }
-            
-    setStart(matrix, dim);
-    setDestination(matrix, dim);
-
-    if (wallsOn){
-        buildWalls(matrix, dim, nextRandom);
-    }
-
+    if (matrix == 0)
+        return;
 
     int cellSize = MAZE_PIXELS / dim;
 
     clearScreen();
-
-    // Labyrint till vänster, instruktioner till höger
     drawMaze(matrix, dim, 8, 24, cellSize);
 
     drawText(8, 4, "MAZERUNNER", COLOR_WHITE);
