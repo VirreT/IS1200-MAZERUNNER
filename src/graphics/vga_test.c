@@ -60,7 +60,9 @@ static void drawInstructions(void)
     drawText(x, 186, "0 OFF", COLOR_GRAY);
     drawText(x, 198, "1 ON", COLOR_GRAY);
 
-    drawText(x, 220, "BTN: APPLY CHANGES", COLOR_YELLOW);
+    drawText(x, 210, "SW5: NEW MAZE", COLOR_WHITE);
+    drawText(x, 228, "BTN: RUN", COLOR_YELLOW);
+
 }
 
 static void showTestMaze(int dim, int wallsOn)
@@ -88,14 +90,14 @@ static void showTestMaze(int dim, int wallsOn)
             n->below = row < dim - 1 ? &cells[row + 1][column] : 0;
             n->left = column > 0 ? &cells[row][column - 1] : 0;
             n->right = column < dim - 1 ? &cells[row][column + 1] : 0;
-
-            
-            setStart(matrix, dim);
-            setDestination(matrix, dim);
-
-            if (wallsOn)
-                buildWalls(matrix, dim, nextRandom);
         }
+    }
+            
+    setStart(matrix, dim);
+    setDestination(matrix, dim);
+
+    if (wallsOn){
+        buildWalls(matrix, dim, nextRandom);
     }
 
 
