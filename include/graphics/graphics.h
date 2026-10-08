@@ -1,5 +1,6 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
+#define COLOR_YELLOW 0xFC
 
 #include "maze/MatrixGenerator.h"
 
@@ -20,5 +21,13 @@ void drawRectangle(int x, int y, int width, int height, unsigned char color);
 void drawGrid(int x, int y, int rows, int columns, int cellSize, unsigned char color);
 
 void drawMaze(node **matrix, int dim, int x, int y, int cellSize);
+
+
+
+void drawText(int x, int y, const char *text,
+              unsigned char color);
+
+void drawNumber(int x, int y, unsigned int number,
+                unsigned char color);
 
 #endif

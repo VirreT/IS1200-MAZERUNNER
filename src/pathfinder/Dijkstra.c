@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <stdint.h>
+
+#include "pathfinder/pathfinder.h"
 #include "maze/MatrixGenerator.h"
 
 int dijkstra(node **matrix, int dim) {

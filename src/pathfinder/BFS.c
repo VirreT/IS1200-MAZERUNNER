@@ -7,6 +7,7 @@
 #include <limits.h>
 #include <stdint.h>
 
+#include "pathfinder/pathfinder.h"
 #include "maze/MatrixGenerator.h"
 
 int bfs(node **matrix, int dim) {
