@@ -60,8 +60,7 @@ static void drawInstructions(void)
     drawText(x, 220, "BTN: APPLY CHANGES", COLOR_YELLOW);
 }
 
-static void showTestMaze(int dim, int wallsOn)
-{
+static void showTestMaze(int dim, int wallsOn){
     int middle = dim / 2;
     int startRow = middle - 1;
     int goalRow = middle + 1;
@@ -115,6 +114,27 @@ static void showTestMaze(int dim, int wallsOn)
     drawInstructions();
 }
 
+void pathFound(node **maze, int dim, const int *reversePath, int length)
+{
+    (void)maze;
+
+    int cellSize = MAZE_PIXELS / dim;
+
+    for (int i = 1; i < length - 1; i++) {
+        int id = reversePath[i];
+        int row = id / dim;
+        int column = id % dim;
+
+        drawRectangle(
+            8 + column * cellSize + 1,
+            24 + row * cellSize + 1,
+            cellSize - 1,
+            cellSize - 1,
+            COLOR_YELLOW
+        );
+    }
+}
+
 int main(void)
 {
     InputState input;
@@ -132,6 +152,20 @@ int main(void)
             int mazeSize = 8 << input.sizeChoice;
 
             showTestMaze(mazeSize, input.wallsOn);
+
+            if (input.algorithm == 0) {
+                int steps = bfs(matrix, mazeSize);
+
+                drawText(208, 4, "BFS", COLOR_WHITE);
+
+                if (steps >= 0) {
+                    drawNumber(238, 4, (unsigned int)steps, COLOR_YELLOW);
+                } else if (steps == -1) {
+                    drawText(238, 4, "NO PATH", COLOR_RED);
+                } else {
+                    drawText(238, 4, "ERROR", COLOR_RED);
+                }
+            }
         }
     }
 }
