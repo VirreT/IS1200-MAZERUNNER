@@ -32,7 +32,7 @@ int main(void){
     int previousButton = get_btn();
 
     while (1) {
-        /* Check switches every time 100ms has passed */
+        // Check switches every time 100ms has passed
         if (*timerStatus & 0x1) {
             *timerStatus = 0;
 
@@ -45,7 +45,7 @@ int main(void){
                 stableReads++;
             }
 
-            /* Godkänn två lika avläsningar 100 ms isär. */
+            // Godkänn två lika avläsningar 100 ms isär
             if (stableReads == 2 && candidateSw != previousSw) {
                 sw = candidateSw;
 
@@ -69,7 +69,7 @@ int main(void){
             }
         }
 
-        /* Kontrollera knappen varje varv i loopen. */
+        // Kontrollera knappen varje varv i loopen
         int button = get_btn();
 
         if (button && !previousButton) {
