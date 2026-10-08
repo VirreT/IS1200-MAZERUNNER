@@ -19,13 +19,11 @@ static const char *algorithmNames[4] = {
     "BFS", "DFS", "DIJKSTRA", "ALL"
 };
 
-void handle_interrupt(unsigned cause)
-{
+void handle_interrupt(unsigned cause){
     (void)cause;
 }
 
-static void showTestMaze(int dim, int wallsOn)
-{
+static void showTestMaze(int dim, int wallsOn){
     matrix = generateMaze(dim, wallsOn);
 
     if (matrix == 0)
@@ -90,8 +88,7 @@ static int runAlgorithm(int algorithm, int dim){
     return result;
 }
 
-int main(void)
-{
+int main(void){
     InputState input;
 
     input_init();
