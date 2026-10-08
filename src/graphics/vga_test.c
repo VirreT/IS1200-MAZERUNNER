@@ -78,7 +78,7 @@ static void showTestMaze(int dim, int wallsOn)
              */
             int onSafePath = (row == startRow && column <= middle) || (column == middle && row >= startRow && row <= goalRow) || (row == goalRow && column >= middle);
 
-            matrix[row][column].weight = 1;
+            matrix[row][column].weight = 1 + nextRandom() & 20; //if only 1 all nodes = 1, now random up to 20
 
             node *n = &matrix[row][column];
 
@@ -178,8 +178,7 @@ int main(void)
 
                 if (cost >= 0) {
                     drawText(208, 14, "COST", COLOR_WHITE);
-                    drawNumber(244, 14,
-                               (unsigned int)cost, COLOR_YELLOW);
+                    drawNumber(244, 14, (unsigned int)cost, COLOR_YELLOW);
                 } else if (cost == -1) {
                     drawText(208, 14, "NO PATH", COLOR_RED);
                 } else {
