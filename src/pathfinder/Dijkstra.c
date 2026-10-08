@@ -123,4 +123,7 @@ int dijkstra(node **matrix, int dim)
         if (current == start)
             break;
     }
+    pathFound(matrix, dim, distance, length);
+
+    return cost;
 }
