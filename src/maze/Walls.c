@@ -1,45 +1,51 @@
-//-----------------
-//---- Walls.c ----
-//-----------------
+//----------------------------
+//--------- walls.c ----------
+//----------------------------
 
-#include <stdio.h>
 
-#include "maze/MatrixGenerator.h"
-#include "helpers/Randomizer.h"
 
-#define NOFWALLS 10
+#include "maze/walls.h"
 
-void buildWalls(node **matrix, int dim){
-    
-    int wallCount = 0;
+void buildWalls(node **matrix, int dim,
+                unsigned int (*randomValue)(void))
+{
+    if (!matrix || !randomValue || dim <= 0)
+        return;
 
-    if (wallCount < NOFWALLS){    
+    int segments = dim * dim / 25;
 
-        int x = rng(0, dim - 1);
-        int y = rng(0, dim - 1);
+    if (segments < 5)
+        segments = 5;
 
-        if (matrix[x][y].weight != 'S' && matrix[x][y].weight != 'D'){
-         
-            matrix[x][y].weight = '#';
-            wallCount++;
-        
+    for (int segment = 0; segment < segments; segment++) {
+        int row = (int)(randomValue() % (unsigned int)dim);
+        int column = (int)(randomValue() % (unsigned int)dim);
+        int vertical = (int)(randomValue() % 2u);
+
+        int length =
+            2 + (int)(randomValue() %
+                      (unsigned int)(dim / 8 + 2));
+
+        /* Längre sträckor får ibland en öppning. */
+        int gap = -1;
+
+        if (length >= 5)
+            gap = 1 + (int)(randomValue() %
+                            (unsigned int)(length - 2));
+
+        for (int k = 0; k < length; k++) {
+            int r = row + (vertical ? k : 0);
+            int c = column + (vertical ? 0 : k);
+
+            if (r >= dim || c >= dim)
+                break;
+
+            if (k == gap)
+                continue;
+
+            if (matrix[r][c].weight != 'S' &&
+                matrix[r][c].weight != 'D')
+                matrix[r][c].weight = '#';
         }
     }
-}
-
-int main() {
-
-    int size = 3;
-
-    node **mtx = generateMatrix(size);
-
-    linkMatrix(mtx, size);
-
-    printMatrix(mtx, size);
-
-    printNode(&mtx[1][1]);
-
-    freeMatrix(mtx, size);
-
-    return 0;
 }

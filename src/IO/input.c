@@ -24,7 +24,7 @@ void input_init(void)
     *timerStatus = 0;
     *timerControl = 0x6;
 
-    stableSw = get_sw() & 0x1F;
+    stableSw = get_sw() & 0x3F;
     candidateSw = stableSw;
     stableReads = 0;
     previousButton = get_btn();
@@ -38,7 +38,7 @@ void input_update(InputState *input)
     if (*timerStatus & 0x1) {
         *timerStatus = 0;
 
-        int rawSw = get_sw() & 0x1F;
+        int rawSw = get_sw() & 0x3F;
 
         if (rawSw != candidateSw) {
             candidateSw = rawSw;
@@ -55,6 +55,7 @@ void input_update(InputState *input)
     input->algorithm = stableSw & 0x3;
     input->sizeChoice = (stableSw >> 2) & 0x3;
     input->wallsOn = (stableSw >> 4) & 0x1;
+    input->newMaze = (stableSw >> 5) & 1;
 
     int button = get_btn();
 

@@ -6,6 +6,7 @@ typedef struct {
     int sizeChoice;
     int wallsOn;
     int startPressed;
+    int newMaze;
 } InputState;
 
 void input_init(void);

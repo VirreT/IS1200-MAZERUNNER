@@ -2,6 +2,9 @@
 #include "IO/input.h"
 #include "pathfinder/pathfinder.h"
 
+#include "maze/walls.h"
+#include "maze/startDestination.h"
+
 #define MAX_SIZE 64
 #define MAZE_PIXELS 192
 
@@ -62,9 +65,8 @@ static void drawInstructions(void)
 
 static void showTestMaze(int dim, int wallsOn)
 {
-    int middle = dim / 2;
-    int startRow = middle - 1;
-    int goalRow = middle + 1;
+
+
 
     for (int row = 0; row < dim; row++) {
         matrix[row] = cells[row];
@@ -76,7 +78,7 @@ static void showTestMaze(int dim, int wallsOn)
              * ned till målets rad,
              * och sedan höger till mål.
              */
-            int onSafePath = (row == startRow && column <= middle) || (column == middle && row >= startRow && row <= goalRow) || (row == goalRow && column >= middle);
+            
 
             matrix[row][column].weight = 1 + nextRandom() % 20; //if only 1 all nodes = 1, now random up to 20
 
@@ -87,16 +89,15 @@ static void showTestMaze(int dim, int wallsOn)
             n->left = column > 0 ? &cells[row][column - 1] : 0;
             n->right = column < dim - 1 ? &cells[row][column + 1] : 0;
 
-            /* Ungefär 25 % väggar utanför den skyddade vägen. */
-            if (wallsOn && !onSafePath) {
-                if (nextRandom() % 100 < 25) {
-                    matrix[row][column].weight = '#';
-                }
-            }
+            
+            setStart(matrix, dim);
+            setDestination(matrix, dim);
+
+            if (wallsOn)
+                buildWalls(matrix, dim, nextRandom);
         }
     }
-    matrix[startRow][0].weight = 'S';
-    matrix[goalRow][dim - 1].weight = 'D';
+
 
     int cellSize = MAZE_PIXELS / dim;
 
@@ -212,16 +213,14 @@ int main(void)
 
         int mazeSize = 8 << input.sizeChoice;
 
-        if (input.sizeChoice != previousSizeChoice ||
-            input.wallsOn != previousWallsOn) {
+        if (input.sizeChoice != previousSizeChoice || input.wallsOn != previousWallsOn || input.newMaze) {
 
             showTestMaze(mazeSize, input.wallsOn);
 
             previousSizeChoice = input.sizeChoice;
             previousWallsOn = input.wallsOn;
         } else {
-            drawMaze(matrix, mazeSize, 8, 24,
-                     MAZE_PIXELS / mazeSize);
+            drawMaze(matrix, mazeSize, 8, 24, MAZE_PIXELS / mazeSize);
         }
 
         drawRectangle(208, 0, 112, 24, COLOR_BLACK);
@@ -245,14 +244,10 @@ int main(void)
 
         if (result >= 0 && savedLength > 0) {
             drawText(8, 228, "STEPS", COLOR_WHITE);
-            drawNumber(50, 228,
-                       (unsigned int)(savedLength - 1),
-                       COLOR_YELLOW);
+            drawNumber(50, 228, (unsigned int)(savedLength - 1), COLOR_YELLOW);
 
             drawText(90, 228, "COST", COLOR_WHITE);
-            drawNumber(126, 228,
-                       (unsigned int)savedCost,
-                       COLOR_YELLOW);
+            drawNumber(126, 228, (unsigned int)savedCost,COLOR_YELLOW);
         } else if (result == -1) {
             drawText(208, 14, "NO PATH", COLOR_RED);
         } else {
