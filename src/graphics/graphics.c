@@ -45,3 +45,33 @@ void drawGrid(int x, int y, int rows, int columns, int cellSize, unsigned char c
         drawRectangle(x + column * cellSize, y, 1, height + 1, color);
     }
 }
+
+void drawMaze(node **matrix, int dim, int x, int y, int cellSize)
+{
+    if (!matrix || dim <= 0 || cellSize < 2)
+        return;
+
+    for (int row = 0; row < dim; row++){
+        for (int column = 0; column < dim; column++){
+            int value = matrix[row][column].weight;
+            unsigned char color = COLOR_BLACK;
+
+            if (value == '#') {
+                color = COLOR_WHITE;
+            } else if (value == 'S') {
+                color = COLOR_GREEN;
+            } else if (value == 'D') {
+                color = COLOR_RED;
+            }
+
+            int pixelX = x + column * cellSize;
+            int pixelY = y + row * cellSize;
+
+            // Fyll rutans insida och lämna plats för rutnätet
+            drawRectangle(pixelX + 1, pixelY + 1, cellSize - 1, cellSize - 1, color);
+        }
+    }
+
+    drawGrid(x, y, dim, dim, cellSize, COLOR_GRAY);
+}
+
