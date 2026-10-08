@@ -12,34 +12,51 @@ void handle_interrupt(unsigned cause)
     (void)cause;
 }
 
+static unsigned int randomState = 123456789u;
+
+static unsigned int nextRandom(void){
+    randomState ^= randomState << 13;
+    randomState ^= randomState >> 17;
+    randomState ^= randomState << 5;
+
+    return randomState;
+}
+
 static void showTestMaze(int dim, int wallsOn)
 {
-    /* Förbered en labyrint med den valda storleken. */
+    int middle = dim / 2;
+    int startRow = middle - 1;
+    int goalRow = middle + 1;
+
     for (int row = 0; row < dim; row++) {
         matrix[row] = cells[row];
 
         for (int column = 0; column < dim; column++) {
+            /*
+             * Skydda en sammanhängande väg:
+             * från start till mitten,
+             * ned till målets rad,
+             * och sedan höger till mål.
+             */
+            int onSafePath =
+                (row == startRow && column <= middle) ||
+                (column == middle &&
+                 row >= startRow && row <= goalRow) ||
+                (row == goalRow && column >= middle);
+
             matrix[row][column].weight = 1;
-        }
-    }
 
-    int middle = dim / 2;
-
-    if (wallsOn) {
-        /* Lodrät vägg med en öppning i mitten. */
-        for (int row = 1; row < dim - 1; row++) {
-            if (row != middle) {
-                matrix[row][middle].weight = '#';
+            /* Ungefär 25 % väggar utanför den skyddade vägen. */
+            if (wallsOn && !onSafePath) {
+                if (nextRandom() % 100 < 25) {
+                    matrix[row][column].weight = '#';
+                }
             }
         }
-
-        /* Två ytterligare väggrutor. */
-        matrix[1][middle + 2].weight = '#';
-        matrix[2][middle + 2].weight = '#';
     }
 
-    matrix[middle - 1][0].weight = 'S';
-    matrix[middle + 1][dim - 1].weight = 'D';
+    matrix[startRow][0].weight = 'S';
+    matrix[goalRow][dim - 1].weight = 'D';
 
     int cellSize = MAZE_PIXELS / dim;
 
