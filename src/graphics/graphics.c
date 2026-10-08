@@ -69,6 +69,7 @@ void drawMaze(node **matrix, int dim, int x, int y, int cellSize)
 
             // Fyll rutans insida och lämna plats för rutnätet
             drawRectangle(pixelX + 1, pixelY + 1, cellSize - 1, cellSize - 1, color);
+            drawCellWeight(pixelX, pixelY, cellSize, (unsigned int)value, COLOR_WHITE); // shows weight on each node
         }
     }
 

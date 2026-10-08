@@ -80,9 +80,7 @@ void drawText(int x, int y, const char *text,
     }
 }
 
-void drawNumber(int x, int y, unsigned int number,
-                unsigned char color)
-{
+void drawNumber(int x, int y, unsigned int number, unsigned char color){
     char text[11];
     int length = 0;
 
@@ -100,3 +98,34 @@ void drawNumber(int x, int y, unsigned int number,
     text[length] = '\0';
     drawText(x, y, text, color);
 }
+
+void drawCellWeight(int x, int y, int cellSize, unsigned int weight, unsigned char color)
+{
+    if (cellSize < 12 || weight < 1 || weight > 20)
+        return;
+
+    int count = weight < 10 ? 1 : 2;
+    int textWidth = count * 6 - 1;
+
+    int textX = x + 1 + (cellSize - 1 - textWidth) / 2;
+    int textY = y + 1 + (cellSize - 1 - 7) / 2;
+
+    for (int digit = 0; digit < count; digit++) {
+        int number;
+
+        if (count == 2 && digit == 0)
+            number = weight / 10;
+        else
+            number = weight % 10;
+
+        for (int row = 0; row < 7; row++) {
+            for (int column = 0; column < 5; column++) {
+                if (digits[number][row] & (1u << (4 - column))) {
+                    putPixel(textX + digit * 6 + column,
+                             textY + row, color);
+                }
+            }
+        }
+    }
+}
+

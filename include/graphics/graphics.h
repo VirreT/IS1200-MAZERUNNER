@@ -24,10 +24,10 @@ void drawMaze(node **matrix, int dim, int x, int y, int cellSize);
 
 
 
-void drawText(int x, int y, const char *text,
-              unsigned char color);
+void drawText(int x, int y, const char *text, unsigned char color);
 
-void drawNumber(int x, int y, unsigned int number,
-                unsigned char color);
+void drawNumber(int x, int y, unsigned int number, unsigned char color);
+
+void drawCellWeight(int x, int y, int cellSize, unsigned int weight, unsigned char color);
 
 #endif

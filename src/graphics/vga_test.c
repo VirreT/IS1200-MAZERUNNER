@@ -126,13 +126,8 @@ void pathFound(node **maze, int dim, const int *reversePath, int length){
 
         savedCost += maze[row][column].weight;
 
-        drawRectangle(
-            8 + column * cellSize + 1,
-            24 + row * cellSize + 1,
-            cellSize - 1,
-            cellSize - 1,
-            COLOR_YELLOW
-        );
+        drawRectangle(8 + column * cellSize + 1, 24 + row * cellSize + 1, cellSize - 1, cellSize - 1, COLOR_YELLOW);
+        drawCellWeight(8 + column * cellSize, 24 + row * cellSize, cellSize, (unsigned int)maze[row][column].weight,COLOR_BLACK);
     }
 }
 
