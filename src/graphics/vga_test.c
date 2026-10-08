@@ -60,7 +60,8 @@ static void drawInstructions(void)
     drawText(x, 220, "BTN: APPLY CHANGES", COLOR_YELLOW);
 }
 
-static void showTestMaze(int dim, int wallsOn){
+static void showTestMaze(int dim, int wallsOn)
+{
     int middle = dim / 2;
     int startRow = middle - 1;
     int goalRow = middle + 1;
@@ -75,11 +76,7 @@ static void showTestMaze(int dim, int wallsOn){
              * ned till målets rad,
              * och sedan höger till mål.
              */
-            int onSafePath =
-                (row == startRow && column <= middle) ||
-                (column == middle &&
-                 row >= startRow && row <= goalRow) ||
-                (row == goalRow && column >= middle);
+            int onSafePath = (row == startRow && column <= middle) || (column == middle && row >= startRow && row <= goalRow) || (row == goalRow && column >= middle);
 
             matrix[row][column].weight = 1;
 
@@ -114,12 +111,15 @@ static void showTestMaze(int dim, int wallsOn){
     drawInstructions();
 }
 
-void pathFound(node **maze, int dim, const int *reversePath, int length)
+
+void pathFound(node **maze, int dim,
+               const int *reversePath, int length)
 {
     (void)maze;
 
     int cellSize = MAZE_PIXELS / dim;
 
+    /* Hoppa över mål och start så att deras färger behålls. */
     for (int i = 1; i < length - 1; i++) {
         int id = reversePath[i];
         int row = id / dim;
@@ -142,7 +142,6 @@ int main(void)
     input_init();
     input_update(&input);
 
-    /* Visa de inställningar som gäller vid uppstart. */
     showTestMaze(8 << input.sizeChoice, input.wallsOn);
 
     while (1) {
@@ -153,10 +152,17 @@ int main(void)
 
             showTestMaze(mazeSize, input.wallsOn);
 
-            if (input.algorithm == 0) {
-                int steps = bfs(matrix, mazeSize);
+            if (input.algorithm == 0 || input.algorithm == 1){
+                
+                int steps;
 
-                drawText(208, 4, "BFS", COLOR_WHITE);
+                if (input.algorithm == 0) {
+                    steps = bfs(matrix, mazeSize);
+                    drawText(208, 4, "BFS", COLOR_WHITE);
+                } else {
+                    steps = dfs(matrix, mazeSize);
+                    drawText(208, 4, "DFS", COLOR_WHITE);
+                }
 
                 if (steps >= 0) {
                     drawNumber(238, 4, (unsigned int)steps, COLOR_YELLOW);
