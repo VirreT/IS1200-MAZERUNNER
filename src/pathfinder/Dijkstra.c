@@ -113,3 +113,4 @@ int dijkstra(node **matrix, int dim)
 
     if (distance[goal] == INT_MAX)
         return -1;
+}
