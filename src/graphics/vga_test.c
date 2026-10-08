@@ -78,7 +78,7 @@ static void showTestMaze(int dim, int wallsOn)
              */
             int onSafePath = (row == startRow && column <= middle) || (column == middle && row >= startRow && row <= goalRow) || (row == goalRow && column >= middle);
 
-            matrix[row][column].weight = 1 + nextRandom() & 20; //if only 1 all nodes = 1, now random up to 20
+            matrix[row][column].weight = 1 + nextRandom() % 20; //if only 1 all nodes = 1, now random up to 20
 
             node *n = &matrix[row][column];
 
@@ -144,13 +144,30 @@ int main(void)
 
     showTestMaze(8 << input.sizeChoice, input.wallsOn);
 
+    int previousSizeChoice = input.sizeChoice;
+    int previousWallsOn = input.wallsOn;
+
     while (1) {
         input_update(&input);
 
         if (input.startPressed) {
             int mazeSize = 8 << input.sizeChoice;
 
-            showTestMaze(mazeSize, input.wallsOn);
+            if (input.sizeChoice != previousSizeChoice || input.wallsOn != previousWallsOn) {
+
+                showTestMaze(mazeSize, input.wallsOn);
+
+                previousSizeChoice = input.sizeChoice;
+                previousWallsOn = input.wallsOn;
+            } 
+            else {
+                
+            /* Rita om samma labyrint och ta bort den gamla gula vägen. */
+            drawMaze(matrix, mazeSize, 8, 24, MAZE_PIXELS / mazeSize);
+            }
+
+            /* Rensa tidigare algoritmnamn och resultat. */
+            drawRectangle(208, 0, 112, 24, COLOR_BLACK);
 
             if (input.algorithm == 0 || input.algorithm == 1) {
                 int steps;
@@ -158,7 +175,8 @@ int main(void)
                 if (input.algorithm == 0) {
                     steps = bfs(matrix, mazeSize);
                     drawText(208, 4, "BFS", COLOR_WHITE);
-                } else {
+                } 
+                else {
                     steps = dfs(matrix, mazeSize);
                     drawText(208, 4, "DFS", COLOR_WHITE);
                 }
@@ -166,12 +184,15 @@ int main(void)
                 if (steps >= 0) {
                     drawNumber(238, 4,
                                (unsigned int)steps, COLOR_YELLOW);
-                } else if (steps == -1) {
+                } 
+                else if (steps == -1) {
                     drawText(238, 4, "NO PATH", COLOR_RED);
-                } else {
+                } 
+                else {
                     drawText(238, 4, "ERROR", COLOR_RED);
                 }
-            } else if (input.algorithm == 2) {
+            } 
+            else if (input.algorithm == 2) {
                 int cost = dijkstra(matrix, mazeSize);
 
                 drawText(208, 4, "DIJKSTRA", COLOR_WHITE);
@@ -179,9 +200,11 @@ int main(void)
                 if (cost >= 0) {
                     drawText(208, 14, "COST", COLOR_WHITE);
                     drawNumber(244, 14, (unsigned int)cost, COLOR_YELLOW);
-                } else if (cost == -1) {
+                } 
+                else if (cost == -1) {
                     drawText(208, 14, "NO PATH", COLOR_RED);
-                } else {
+                } 
+                else {
                     drawText(208, 14, "ERROR", COLOR_RED);
                 }
             }
