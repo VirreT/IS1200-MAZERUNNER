@@ -1,7 +1,7 @@
 SRC_DIR ?= ./
 OBJ_DIR ?= ./
 
-SOURCES ?= src/main.c src/graphics/graphics.c src/graphics/text.c src/IO/input.c src/IO/switches.c src/pathfinder/BFS.c src/pathfinder/DFS.c src/pathfinder/Dijkstra.c dtekv-lib.c boot.S src/maze/Walls.c src/maze/startDestination.c
+SOURCES ?= src/Main.c src/graphics/graphics.c src/graphics/text.c src/IO/input.c src/IO/switches.c src/pathfinder/BFS.c src/pathfinder/DFS.c src/pathfinder/Dijkstra.c dtekv-lib.c boot.S src/maze/Walls.c src/maze/startDestination.c
 
 OBJECTS ?= $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 LINKER ?= $(SRC_DIR)/dtekv-script.lds
