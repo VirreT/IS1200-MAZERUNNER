@@ -152,8 +152,7 @@ int main(void)
 
             showTestMaze(mazeSize, input.wallsOn);
 
-            if (input.algorithm == 0 || input.algorithm == 1){
-                
+            if (input.algorithm == 0 || input.algorithm == 1) {
                 int steps;
 
                 if (input.algorithm == 0) {
@@ -165,11 +164,26 @@ int main(void)
                 }
 
                 if (steps >= 0) {
-                    drawNumber(238, 4, (unsigned int)steps, COLOR_YELLOW);
+                    drawNumber(238, 4,
+                               (unsigned int)steps, COLOR_YELLOW);
                 } else if (steps == -1) {
                     drawText(238, 4, "NO PATH", COLOR_RED);
                 } else {
                     drawText(238, 4, "ERROR", COLOR_RED);
+                }
+            } else if (input.algorithm == 2) {
+                int cost = dijkstra(matrix, mazeSize);
+
+                drawText(208, 4, "DIJKSTRA", COLOR_WHITE);
+
+                if (cost >= 0) {
+                    drawText(208, 14, "COST", COLOR_WHITE);
+                    drawNumber(244, 14,
+                               (unsigned int)cost, COLOR_YELLOW);
+                } else if (cost == -1) {
+                    drawText(208, 14, "NO PATH", COLOR_RED);
+                } else {
+                    drawText(208, 14, "ERROR", COLOR_RED);
                 }
             }
         }
