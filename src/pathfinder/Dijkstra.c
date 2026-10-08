@@ -113,4 +113,14 @@ int dijkstra(node **matrix, int dim)
 
     if (distance[goal] == INT_MAX)
         return -1;
+    int cost = distance[goal];
+    int length = 0;
+
+    /* Återskapa vägen från mål till start. */
+    for (int current = goal; ; current = parent[current]) {
+        distance[length++] = current;
+
+        if (current == start)
+            break;
+    }
 }
