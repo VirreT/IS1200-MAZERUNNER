@@ -9,4 +9,6 @@ void drawComparison(const char *const algorithmNames[], const int resultStatus[]
 
 void drawSolution(node **maze, int dim, const int *reversePath, int length, int cellSize);
 
+void drawResult(const char *algorithmName, int result, int length, int cost);
+
 #endif

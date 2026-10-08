@@ -42,9 +42,7 @@ void drawComparison(const char *const algorithmNames[], const int resultStatus[]
             drawNumber(262, y, resultSteps[i], COLOR_YELLOW);
             drawNumber(286, y, resultCost[i], COLOR_YELLOW);
         } else {
-            drawText(262, y,
-                     resultStatus[i] == -1 ? "NO PATH" : "ERROR",
-                     COLOR_RED);
+            drawText(262, y, resultStatus[i] == -1 ? "NO PATH" : "ERROR", COLOR_RED);
         }
     }
 
@@ -65,6 +63,27 @@ void drawSolution(node **maze, int dim, const int *reversePath, int length, int 
         drawRectangle(x + 1, y + 1, cellSize - 1, cellSize - 1, COLOR_YELLOW);
 
         drawCellWeight(x, y, cellSize, (unsigned int)maze[row][column].weight, COLOR_BLACK);
+    }
+}
+
+void drawResult(const char *algorithmName, int result, int length, int cost)
+{
+    drawText(208, 4, algorithmName, COLOR_WHITE);
+
+    if (result >= 0 && length > 0) {
+        drawText(8, 228, "STEPS", COLOR_WHITE);
+        drawNumber(50, 228, (unsigned int)(length - 1), COLOR_YELLOW);
+
+        drawText(90, 228, "COST", COLOR_WHITE);
+
+        drawNumber(126, 228, (unsigned int)cost, COLOR_YELLOW);
+
+    } 
+    else if (result == -1){
+        drawText(208, 14, "NO PATH", COLOR_RED);
+    } 
+    else{
+        drawText(208, 14, "ERROR", COLOR_RED);
     }
 }
 

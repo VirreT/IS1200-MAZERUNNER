@@ -46,7 +46,7 @@ void pathFound(node **maze, int dim, const int *reversePath, int length){
     savedLength = length;
     savedCost = 0;
 
-    /* Start och mål bidrar med kostnaden 0. */
+    // Start och mål bidrar med kostnaden 0
     for (int i = 1; i < length - 1; i++) {
         int id = reversePath[i];
         int row = id / dim;
@@ -82,12 +82,11 @@ static int runAlgorithm(int algorithm, int dim){
 
     if (result >= 0 && savedLength > 0) {
         resultStatus[algorithm] = 0;
-        resultSteps[algorithm] = savedLength - 1;
-        resultCost[algorithm] = savedCost;
+        resultSteps[algorithm]  = savedLength - 1;
+        resultCost[algorithm]   = savedCost;
     } else {
         resultStatus[algorithm] = result == -1 ? -1 : -2;
     }
-
     return result;
 }
 
@@ -124,7 +123,7 @@ int main(void)
         drawRectangle(208, 0, 112, 24, COLOR_BLACK);
         drawRectangle(8, 226, 192, 10, COLOR_BLACK);
 
-        /* Återställ instruktionerna efter en tidigare jämförelse. */
+        // Återställ instruktionerna efter en tidigare jämförelse
         drawRectangle(208, 24, 112, 64, COLOR_BLACK);
         drawInstructions();
 
@@ -138,18 +137,6 @@ int main(void)
 
         int result = runAlgorithm(input.algorithm, mazeSize);
 
-        drawText(208, 4, algorithmNames[input.algorithm], COLOR_WHITE);
-
-        if (result >= 0 && savedLength > 0) {
-            drawText(8, 228, "STEPS", COLOR_WHITE);
-            drawNumber(50, 228, (unsigned int)(savedLength - 1), COLOR_YELLOW);
-
-            drawText(90, 228, "COST", COLOR_WHITE);
-            drawNumber(126, 228, (unsigned int)savedCost,COLOR_YELLOW);
-        } else if (result == -1) {
-            drawText(208, 14, "NO PATH", COLOR_RED);
-        } else {
-            drawText(208, 14, "ERROR", COLOR_RED);
-        }
+        drawResult(algorithmNames[input.algorithm], result, savedLength, savedCost);
     }
 }
