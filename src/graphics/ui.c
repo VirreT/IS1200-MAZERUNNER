@@ -23,3 +23,31 @@ void drawInstructions(void){
     drawText(x, 210, "SW5: NEW MAZE", COLOR_WHITE);
     drawText(x, 228, "BTN: RUN", COLOR_YELLOW);
 }
+
+void drawComparison(const char *const algorithmNames[], const int resultStatus[], const int resultSteps[], const int resultCost[]){
+    /* Tabellen ersätter algoritminstruktionerna. */
+    drawRectangle(208, 24, 112, 64, COLOR_BLACK);
+
+    drawText(208, 4, "ALL", COLOR_WHITE);
+    drawText(208, 28, "ALG", COLOR_WHITE);
+    drawText(262, 28, "S", COLOR_WHITE);
+    drawText(286, 28, "C", COLOR_WHITE);
+
+    for (int i = 0; i < 3; i++) {
+        int y = 42 + i * 12;
+
+        drawText(208, y, algorithmNames[i], COLOR_WHITE);
+
+        if (resultStatus[i] == 0) {
+            drawNumber(262, y, resultSteps[i], COLOR_YELLOW);
+            drawNumber(286, y, resultCost[i], COLOR_YELLOW);
+        } else {
+            drawText(262, y,
+                     resultStatus[i] == -1 ? "NO PATH" : "ERROR",
+                     COLOR_RED);
+        }
+    }
+
+    drawRectangle(8, 226, 192, 10, COLOR_BLACK);
+    drawText(8, 228, "S STEPS  C COST", COLOR_WHITE);
+}
