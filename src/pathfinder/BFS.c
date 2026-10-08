@@ -1,69 +1,39 @@
-//-----------------------------------
-//---- Partly Written by ChatGPT ----
-//-----------------------------------
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <stdint.h>
-
+/* Anpassad med hjälp av ChatGPT. */
 #include "pathfinder/pathfinder.h"
-#include "maze/MatrixGenerator.h"
 
-int bfs(node **matrix, int dim) {
-    if (matrix == NULL || dim <= 0 || dim > INT_MAX / dim) {
-        printf("BFS: invalid matrix or size.\n");
+int bfs(node **matrix, int dim)
+{
+    if (!matrix || dim <= 0 || dim > 64)
         return -2;
-    }
 
     int count = dim * dim;
     int start = -1;
     int goal = -1;
 
-    /* Hitta start och mål */
+    static int queue[MAX_PATH_NODES];
+    static int parent[MAX_PATH_NODES];
+
+    /* Hitta start och mål. */
     for (int row = 0; row < dim; row++) {
-        if (matrix[row] == NULL) {
-            printf("BFS: missing matrix row.\n");
+        if (!matrix[row])
             return -2;
+
+        for (int column = 0; column < dim; column++) {
+            int weight = matrix[row][column].weight;
+
+            if (weight == 'S')
+                start = row * dim + column;
+            else if (weight == 'D')
+                goal = row * dim + column;
         }
-
-        for (int col = 0; col < dim; col++) {
-            if (matrix[row][col].weight == 'S') {
-                start = row * dim + col;
-            } else if (matrix[row][col].weight == 'D') {
-                goal = row * dim + col;
-            }
-        }
     }
 
-    if (start == -1 || goal == -1) {
-        printf("BFS: start S or destination D is missing.\n");
+    if (start == -1 || goal == -1)
         return -2;
-    }
 
-    if ((size_t)count > SIZE_MAX / sizeof(int)) {
-        printf("BFS: matrix is too large.\n");
-        return -2;
-    }
-
-    /*
-     * Kön lagrar rutornas index.
-     * parent lagrar föregående ruta längs sökvägen.
-     * parent == -1 betyder att rutan inte är besökt.
-     */
-    int *queue = malloc((size_t)count * sizeof(int));
-    int *parent = malloc((size_t)count * sizeof(int));
-
-    if (queue == NULL || parent == NULL) {
-        free(queue);
-        free(parent);
-        printf("BFS: memory allocation failed.\n");
-        return -2;
-    }
-
-    for (int i = 0; i < count; i++) {
+    /* -1 betyder att rutan inte har upptäckts. */
+    for (int i = 0; i < count; i++)
         parent[i] = -1;
-    }
 
     int head = 0;
     int tail = 0;
@@ -71,91 +41,62 @@ int bfs(node **matrix, int dim) {
     queue[tail++] = start;
     parent[start] = start;
 
-    /* Ordning: ovanför, nedanför, vänster, höger */
     const int rowChange[4] = {-1, 1, 0, 0};
-    const int colChange[4] = {0, 0, -1, 1};
+    const int columnChange[4] = {0, 0, -1, 1};
 
     while (head < tail) {
         int current = queue[head++];
 
-        if (current == goal) {
+        if (current == goal)
             break;
-        }
 
         int row = current / dim;
-        int col = current % dim;
-        node *cur = &matrix[row][col];
+        int column = current % dim;
+
+        node *n = &matrix[row][column];
 
         node *neighbors[4] = {
-            cur->above,
-            cur->below,
-            cur->left,
-            cur->right
+            n->above,
+            n->below,
+            n->left,
+            n->right
         };
 
         for (int i = 0; i < 4; i++) {
             int nextRow = row + rowChange[i];
-            int nextCol = col + colChange[i];
+            int nextColumn = column + columnChange[i];
 
-            /* Hoppa över koordinater utanför matrisen */
             if (nextRow < 0 || nextRow >= dim ||
-                nextCol < 0 || nextCol >= dim) {
+                nextColumn < 0 || nextColumn >= dim)
                 continue;
-            }
 
-            int next = nextRow * dim + nextCol;
+            int next = nextRow * dim + nextColumn;
 
-            /*
-             * Hoppa över saknad länk, vägg eller besökt ruta.
-             * Även en NULL-länk faller bort i första kontrollen.
-             */
-            if (neighbors[i] != &matrix[nextRow][nextCol] ||
-                matrix[nextRow][nextCol].weight == '#' ||
-                parent[next] != -1) {
+            if (neighbors[i] != &matrix[nextRow][nextColumn] ||
+                matrix[nextRow][nextColumn].weight == '#' ||
+                parent[next] != -1)
                 continue;
-            }
 
-            /* Markera besökt direkt när rutan läggs i kön */
             parent[next] = current;
             queue[tail++] = next;
         }
     }
 
-    if (parent[goal] == -1) {
-        printf("BFS: no path found.\n");
-        free(queue);
-        free(parent);
+    if (parent[goal] == -1)
         return -1;
-    }
 
-    /* Återanvänd kön för att lagra vägen från mål till start */
+    /* Återanvänd kön för vägen från mål till start. */
     int length = 0;
 
     for (int current = goal; ; current = parent[current]) {
         queue[length++] = current;
 
-        if (current == start) {
+        if (current == start)
             break;
-        }
     }
 
-    /* Skriv ut vägen från start till mål */
-    printf("BFS path: ");
+    /* Lämna vägen till huvudprogrammet. */
+    pathFound(matrix, dim, queue, length);
 
-    for (int i = length - 1; i >= 0; i--) {
-        int id = queue[i];
-
-        printf("(%d,%d)%s",
-               id / dim,
-               id % dim,
-               i > 0 ? " -> " : "\n");
-    }
-
-    int steps = length - 1;
-    printf("Steps: %d\n", steps);
-
-    free(queue);
-    free(parent);
-
-    return steps;
+    return length - 1;
 }

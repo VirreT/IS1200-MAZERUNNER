@@ -84,6 +84,13 @@ static void showTestMaze(int dim, int wallsOn)
 
             matrix[row][column].weight = 1;
 
+            node *n = &matrix[row][column];
+
+            n->above = row > 0 ? &cells[row - 1][column] : 0;
+            n->below = row < dim - 1 ? &cells[row + 1][column] : 0;
+            n->left = column > 0 ? &cells[row][column - 1] : 0;
+            n->right = column < dim - 1 ? &cells[row][column + 1] : 0;
+
             /* Ungefär 25 % väggar utanför den skyddade vägen. */
             if (wallsOn && !onSafePath) {
                 if (nextRandom() % 100 < 25) {
