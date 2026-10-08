@@ -241,8 +241,7 @@ int main(void)
 
         int result = runAlgorithm(input.algorithm, mazeSize);
 
-        drawText(208, 4, algorithmNames[input.algorithm],
-                 COLOR_WHITE);
+        drawText(208, 4, algorithmNames[input.algorithm], COLOR_WHITE);
 
         if (result >= 0 && savedLength > 0) {
             drawText(8, 228, "STEPS", COLOR_WHITE);
