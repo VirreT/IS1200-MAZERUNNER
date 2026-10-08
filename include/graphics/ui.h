@@ -1,7 +1,7 @@
 
 #ifndef UI_H
 #define UI_H
-#include "MatrixGenerator.h"
+#include "maze/MatrixGenerator.h"
 
 void drawInstructions(void);
 
