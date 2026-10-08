@@ -51,3 +51,20 @@ void drawComparison(const char *const algorithmNames[], const int resultStatus[]
     drawRectangle(8, 226, 192, 10, COLOR_BLACK);
     drawText(8, 228, "S STEPS  C COST", COLOR_WHITE);
 }
+
+void drawSolution(node **maze, int dim, const int *reversePath, int length, int cellSize)
+{
+    for (int i = 1; i < length - 1; i++) {
+        int id = reversePath[i];
+        int row = id / dim;
+        int column = id % dim;
+
+        int x = 8 + column * cellSize;
+        int y = 24 + row * cellSize;
+
+        drawRectangle(x + 1, y + 1, cellSize - 1, cellSize - 1, COLOR_YELLOW);
+
+        drawCellWeight(x, y, cellSize, (unsigned int)maze[row][column].weight, COLOR_BLACK);
+    }
+}
+

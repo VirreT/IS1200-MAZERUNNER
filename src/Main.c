@@ -8,21 +8,21 @@
 
 static node **matrix;
 
-void handle_interrupt(unsigned cause)
-{
-    (void)cause;
-}
-
-static const char *algorithmNames[4] = {
-    "BFS", "DFS", "DIJKSTRA", "ALL"
-};
-
 static int savedLength;
 static int savedCost;
 
 static int resultStatus[3];
 static int resultSteps[3];
 static int resultCost[3];
+
+static const char *algorithmNames[4] = {
+    "BFS", "DFS", "DIJKSTRA", "ALL"
+};
+
+void handle_interrupt(unsigned cause)
+{
+    (void)cause;
+}
 
 static void showTestMaze(int dim, int wallsOn)
 {
@@ -42,12 +42,9 @@ static void showTestMaze(int dim, int wallsOn)
     drawInstructions();
 }
 
-
 void pathFound(node **maze, int dim, const int *reversePath, int length){
     savedLength = length;
     savedCost = 0;
-
-    int cellSize = MAZE_PIXELS / dim;
 
     /* Start och mål bidrar med kostnaden 0. */
     for (int i = 1; i < length - 1; i++) {
@@ -56,10 +53,9 @@ void pathFound(node **maze, int dim, const int *reversePath, int length){
         int column = id % dim;
 
         savedCost += maze[row][column].weight;
-
-        drawRectangle(8 + column * cellSize + 1, 24 + row * cellSize + 1, cellSize - 1, cellSize - 1, COLOR_YELLOW);
-        drawCellWeight(8 + column * cellSize, 24 + row * cellSize, cellSize, (unsigned int)maze[row][column].weight,COLOR_BLACK);
     }
+
+    drawSolution(maze, dim, reversePath, length, MAZE_PIXELS / dim);
 }
 
 static int runAlgorithm(int algorithm, int dim){
